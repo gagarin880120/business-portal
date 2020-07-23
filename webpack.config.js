@@ -15,7 +15,7 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|tsx)?$/,
-        use: 'ts-loader',
+        use: 'babel-loader',
         exclude: /node_modules/,
       },
       {
@@ -48,7 +48,7 @@ module.exports = {
       },
     ],
   },
-  resolve: { extensions: ['.ts', '.tsx'] },
+  resolve: { extensions: ['.js', '.ts', '.tsx'] },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new HtmlWebpackPlugin({
@@ -58,6 +58,5 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
   },
 };
