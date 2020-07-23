@@ -1,0 +1,12 @@
+@font-face {
+  font-family: Nunito-Regular;
+  src: url('../../assets/fonts/Nunito-Regular.ttf');
+}
+
+.wrapper {
+  font-family: Nunito-Regular;
+}
+
+.header {
+  color: red;
+}
