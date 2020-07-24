@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import {
-  ARE_NEWS_LOADED, NEWS, NewsActionTypes,
+  NewsItem, ARE_NEWS_LOADED, NEWS, NewsActionTypes,
 } from './types';
 
 function setAreNewsLoaded(areNewsLoaded: boolean): NewsActionTypes {
@@ -10,7 +10,7 @@ function setAreNewsLoaded(areNewsLoaded: boolean): NewsActionTypes {
   };
 }
 
-function setNews(news: Array<Object>): NewsActionTypes {
+function setNews(news: Array<NewsItem>): NewsActionTypes {
   return {
     type: NEWS,
     news,
@@ -27,7 +27,16 @@ function getNews(country: string) {
     dispatch(setAreNewsLoaded(false));
     return fetch(url)
       .then((res) => res.json())
-      .then((data) => dispatch(setNews(data.articles)));
+      .then((data) => {
+        const items = data.articles.map((v: any) => ({
+          title: v.title,
+          url: v.url,
+          urlToImage: v.urlToImage,
+          source: v.source.name,
+        }));
+        dispatch(setNews(items));
+        dispatch(setAreNewsLoaded(true));
+      });
   };
 }
 

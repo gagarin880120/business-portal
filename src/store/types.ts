@@ -1,6 +1,13 @@
+interface NewsItem {
+  title: string
+  url: string
+  urlToImage: string
+  source: string
+}
+
 interface NewsState {
   areNewsLoaded: boolean;
-  news: Array<Object> | null;
+  news: Array<NewsItem> | null;
 }
 
 const ARE_NEWS_LOADED = 'ARE_NEWS_LOADED';
@@ -13,11 +20,11 @@ interface AreNewsLoadedAction {
 
 interface NewsAction {
   type: typeof NEWS
-  news: Array<Object>
+  news: Array<NewsItem>
 }
 
 type NewsActionTypes = AreNewsLoadedAction | NewsAction;
 
 export {
-  NewsState, ARE_NEWS_LOADED, NEWS, NewsActionTypes,
+  NewsItem, NewsState, ARE_NEWS_LOADED, NEWS, NewsActionTypes,
 };
