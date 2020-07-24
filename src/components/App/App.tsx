@@ -1,17 +1,12 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader/root';
+import NewsContainer from '../../pages/News';
 import styles from './App.module.css';
 
-interface AppProps {
-  name: string;
-}
-
-function App({ name }: AppProps) {
+function App() {
   return (
     <div className={styles.wrapper}>
-      <h1 className={styles.header}>
-        {`Hello, ${name}!`}
-      </h1>
+      <NewsContainer />
     </div>
   );
 }
