@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styles from './NewsPage.module.css';
-import NewsCard from '../../components/NewsCard/NewsCard';
+import NewsItemCard from '../../components/NewsItemCard/NewsItemCard';
 import { NewsItem } from '../../store/types';
 
 interface NewsPageProps {
@@ -9,19 +9,19 @@ interface NewsPageProps {
 
 export default function NewsPage({ news }: NewsPageProps) {
   return (
-    <>
+    <div className={styles.wrapper}>
       {
     news.map((item) => (
-      <NewsCard
+      <NewsItemCard
         title={item.title}
         url={item.url}
         key={item.url}
         urlToImage={item.urlToImage}
-        source={item.source}
+        date={item.date}
       />
     ))
   }
-    </>
+    </div>
 
   );
 }
