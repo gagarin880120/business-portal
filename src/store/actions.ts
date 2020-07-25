@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import {
-  NewsItem, ARE_NEWS_LOADED, NEWS, NewsActionTypes,
+  NewsItem, ARE_NEWS_LOADED, NEWS, COUNTRY, CATHEGORY, CURRENT_PAGE, TOTAL_PAGES, NewsActionTypes,
 } from './types';
 
 function setAreNewsLoaded(areNewsLoaded: boolean): NewsActionTypes {
@@ -17,12 +17,44 @@ function setNews(news: Array<NewsItem>): NewsActionTypes {
   };
 }
 
-function getNews(country: string) {
+function setCountry(country: string): NewsActionTypes {
+  return {
+    type: COUNTRY,
+    country,
+  };
+}
+
+function setCathegory(cathegory: string): NewsActionTypes {
+  return {
+    type: CATHEGORY,
+    cathegory,
+  };
+}
+
+function setCurrentPage(currentPage: number): NewsActionTypes {
+  return {
+    type: CURRENT_PAGE,
+    currentPage,
+  };
+}
+
+function setTotalPages(totalPages: number): NewsActionTypes {
+  return {
+    type: TOTAL_PAGES,
+    totalPages,
+  };
+}
+
+function getNews(
+  country: string, cathegory: string, page: number, news: null | Array<NewsItem>,
+) {
   const API_KEY = 'e8169df8eb694e758fae2531e218d78e';
   const url = 'https://newsapi.org/v2/top-headlines?'
   + `apiKey=${API_KEY}`
   + `&country=${country}`
-  + '&category=business';
+  + `&category=${cathegory}`
+  + '&pageSize=10'
+  + `&page=${page}`;
   return (dispatch: Dispatch) => {
     dispatch(setAreNewsLoaded(false));
     return fetch(url)
@@ -32,14 +64,16 @@ function getNews(country: string) {
           title: v.title,
           url: v.url,
           urlToImage: v.urlToImage,
-          source: v.source.name,
+          date: new Date(v.publishedAt).toLocaleDateString('en-GB').split('/').join(' '),
         }));
-        dispatch(setNews(items));
+        dispatch(setCurrentPage(page));
+        dispatch(setNews(page > 1 ? [...news, ...items] : items));
         dispatch(setAreNewsLoaded(true));
+        dispatch(setTotalPages(Math.ceil(data.totalResults / 10)));
       });
   };
 }
 
 export {
-  setAreNewsLoaded, setNews, getNews,
+  setAreNewsLoaded, setNews, setCountry, setCathegory, setCurrentPage, setTotalPages, getNews,
 };

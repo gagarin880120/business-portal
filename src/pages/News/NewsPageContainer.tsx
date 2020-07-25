@@ -5,12 +5,11 @@ import { ThunkDispatch } from 'redux-thunk';
 import { NewsState, NewsItem } from '../../store/types';
 import { selectAreNewsLoaded, selectNews } from '../../store/selectors';
 import { getNews } from '../../store/actions';
-import Spinner from '../../components/Spinner/Spinner';
 import NewsPage from './NewsPage';
 
 interface NewsPageContainerProps {
   areNewsLoaded: boolean
-  news: Array<NewsItem>
+  news: Array<NewsItem> | null
   onPageLoad: () => void
 }
 
@@ -20,7 +19,10 @@ export function NewsPageContainer({ news, onPageLoad, areNewsLoaded }: NewsPageC
   }, []);
 
   return (
-    !areNewsLoaded ? <Spinner /> : <NewsPage news={news} />
+    <NewsPage
+      news={news}
+      areNewsLoaded={areNewsLoaded}
+    />
   );
 }
 
@@ -31,7 +33,7 @@ export const mapStateToProps = (state: NewsState) => ({
 
 export const mapDispatchToProps = (dispatch: ThunkDispatch<NewsState, void, Action>) => ({
   onPageLoad() {
-    dispatch(getNews('us'));
+    dispatch(getNews('us', 'business', 1, null));
   },
 });
 
