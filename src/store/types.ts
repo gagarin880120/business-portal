@@ -1,8 +1,10 @@
 interface NewsItem {
   title: string
   url: string
-  urlToImage: string
+  urlToImage?: string
   date: string
+  id?: number
+  style?: Object
 }
 
 interface NewsState {
@@ -10,16 +12,17 @@ interface NewsState {
   news: Array<NewsItem> | null;
   cathegory: string
   country: string
-  currentPage: number
-  totalPages: number
+  currentNewsItemCardId: number
+  isIdChanging: boolean
 }
 
 const ARE_NEWS_LOADED = 'ARE_NEWS_LOADED';
 const NEWS = 'NEWS';
 const COUNTRY = 'COUNTRY';
 const CATHEGORY = 'CATHEGORY';
-const CURRENT_PAGE = 'CURRENT_PAGE';
-const TOTAL_PAGES = 'TOTAL_PAGES';
+const CURRENT_NEWS_ITEM_CARD_ID = 'CURRENT_NEWS_ITEM_CARD_ID';
+const IS_ID_CHANGING = 'IS_ID_CHANGING';
+
 
 interface AreNewsLoadedAction {
   type: typeof ARE_NEWS_LOADED
@@ -41,24 +44,24 @@ interface CathegoryAction {
   cathegory: string
 }
 
-interface CurrentPageAction {
-  type: typeof CURRENT_PAGE
-  currentPage: number
+interface CurrentNewsItemCardIdAction {
+  type: typeof CURRENT_NEWS_ITEM_CARD_ID
+  currentNewsItemCardId: number
 }
 
-interface TotalPagesAction {
-  type: typeof TOTAL_PAGES
-  totalPages: number
+interface IsIdChangingAction {
+  type: typeof IS_ID_CHANGING
+  isIdChanging: boolean
 }
 
 type NewsActionTypes = AreNewsLoadedAction
 | NewsAction
 | CountryAction
 | CathegoryAction
-| CurrentPageAction
-| TotalPagesAction;
+| CurrentNewsItemCardIdAction
+| IsIdChangingAction;
 
 export {
   NewsItem, NewsState, ARE_NEWS_LOADED, NEWS, COUNTRY,
-  CATHEGORY, CURRENT_PAGE, TOTAL_PAGES, NewsActionTypes,
+  CURRENT_NEWS_ITEM_CARD_ID, CATHEGORY, IS_ID_CHANGING, NewsActionTypes,
 };

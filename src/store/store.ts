@@ -1,7 +1,8 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import {
-  NewsState, ARE_NEWS_LOADED, NEWS, COUNTRY, CATHEGORY, CURRENT_PAGE, TOTAL_PAGES, NewsActionTypes,
+  NewsState, ARE_NEWS_LOADED, NEWS, COUNTRY, CATHEGORY, CURRENT_NEWS_ITEM_CARD_ID,
+  IS_ID_CHANGING, NewsActionTypes,
 } from './types';
 
 const initialState: NewsState = {
@@ -9,8 +10,8 @@ const initialState: NewsState = {
   news: null,
   country: 'us',
   cathegory: 'business',
-  currentPage: 1,
-  totalPages: 0,
+  currentNewsItemCardId: 0,
+  isIdChanging: false
 };
 
 function reducer(
@@ -26,10 +27,10 @@ function reducer(
       return { ...state, country: action.country };
     case CATHEGORY:
       return { ...state, cathegory: action.cathegory };
-    case CURRENT_PAGE:
-      return { ...state, currentPage: action.currentPage };
-    case TOTAL_PAGES:
-      return { ...state, totalPages: action.totalPages };
+    case CURRENT_NEWS_ITEM_CARD_ID:
+      return { ...state, currentNewsItemCardId: action.currentNewsItemCardId };
+    case IS_ID_CHANGING:
+      return { ...state, isIdChanging: action.isIdChanging };
     default:
       return state;
   }

@@ -69,10 +69,14 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@types/react-slick": "^0.23.4",
+    "@types/react-window": "^1.8.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hot-loader": "^4.12.21",
     "react-redux": "^7.2.0",
+    "react-slick": "^0.27.1",
+    "react-window": "^1.8.5",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"
   }

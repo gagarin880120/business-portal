@@ -1,35 +1,68 @@
 import * as React from 'react';
-import styles from './NewsPage.module.css';
-import NewsItemCard from '../../components/NewsItemCard/NewsItemCard';
-import Spinner from '../../components/Spinner/Spinner';
-import FooterContainer from '../../components/Footer';
+import { FixedSizeList } from 'react-window';
 import { NewsItem } from '../../store/types';
+import NewsPageNavBarContainer from '../../components/NewsPageNavBar';
+import Carousel from '../../components/Carousel/Carousel';
+import NewsListItemContainer from '../../components/NewsListItem';
+import Footer from '../../components/Footer/Footer';
+import Spinner from '../../components/Spinner/Spinner';
+import styles from './NewsPage.module.css';
 
 interface NewsPageProps {
-  areNewsLoaded: boolean
   news: Array<NewsItem> | null
+  currentNewsItemCardId: number
+  isIdChanging: boolean
 }
 
-export default function NewsPage({ news, areNewsLoaded }: NewsPageProps) {
+interface ListRowProps {
+  index: number
+  style: Object
+}
+
+export default function NewsPage({ news, currentNewsItemCardId, isIdChanging }: NewsPageProps) {
+  const ListRow = ({ index, style }: ListRowProps) => (
+    <NewsListItemContainer
+      style={style}
+      title={news[index].title}
+      url={news[index].url}
+      date={news[index].date}
+      id={index}
+    />
+  );
+
   return (
     <div className={styles.wrapper}>
+      <NewsPageNavBarContainer />
       {
-        news
-          ? news.map((item) => (
-            <NewsItemCard
-              title={item.title}
-              url={item.url}
-              key={item.url}
-              urlToImage={item.urlToImage}
-              date={item.date}
-            />
-          )) : <Spinner />
+        news ? (
+          <div className={styles.contentContainer}>
+            {
+              isIdChanging ? (
+                <div className={styles.idIsLoading}>
+                  <Spinner />
+                </div>
+              ) : (
+                <Carousel
+                  currentNewsItemCardId={currentNewsItemCardId}
+                  news={news}
+                />
+              )
+            }
+
+            <FixedSizeList
+              height={500}
+              itemCount={news.length}
+              itemSize={75}
+              width={450}
+              className={styles.list}
+            >
+              {ListRow}
+            </FixedSizeList>
+          </div>
+        ) : null
       }
       {
-        !areNewsLoaded ? <Spinner /> : null
-      }
-      {
-        news ? <FooterContainer /> : null
+        news ? <Footer /> : null
       }
     </div>
 

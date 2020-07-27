@@ -3,17 +3,20 @@ import { connect } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { NewsState, NewsItem } from '../../store/types';
-import { selectAreNewsLoaded, selectNews } from '../../store/selectors';
+import { selectAreNewsLoaded, selectNews, selectCurrentNewsItemCardId, selectIsIdChanging } from '../../store/selectors';
 import { getNews } from '../../store/actions';
 import NewsPage from './NewsPage';
 
 interface NewsPageContainerProps {
-  areNewsLoaded: boolean
   news: Array<NewsItem> | null
   onPageLoad: () => void
+  currentNewsItemCardId: number
+  isIdChanging: boolean
 }
 
-export function NewsPageContainer({ news, onPageLoad, areNewsLoaded }: NewsPageContainerProps) {
+export function NewsPageContainer({
+  news, onPageLoad, currentNewsItemCardId, isIdChanging,
+}: NewsPageContainerProps) {
   React.useEffect(() => {
     onPageLoad();
   }, []);
@@ -21,7 +24,8 @@ export function NewsPageContainer({ news, onPageLoad, areNewsLoaded }: NewsPageC
   return (
     <NewsPage
       news={news}
-      areNewsLoaded={areNewsLoaded}
+      currentNewsItemCardId={currentNewsItemCardId}
+      isIdChanging={isIdChanging}
     />
   );
 }
@@ -29,11 +33,13 @@ export function NewsPageContainer({ news, onPageLoad, areNewsLoaded }: NewsPageC
 export const mapStateToProps = (state: NewsState) => ({
   areNewsLoaded: selectAreNewsLoaded(state),
   news: selectNews(state),
+  currentNewsItemCardId: selectCurrentNewsItemCardId(state),
+  isIdChanging: selectIsIdChanging(state),
 });
 
 export const mapDispatchToProps = (dispatch: ThunkDispatch<NewsState, void, Action>) => ({
   onPageLoad() {
-    dispatch(getNews('us', 'business', 1, null));
+    dispatch(getNews('us', 'business'));
   },
 });
 

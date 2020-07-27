@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import {
-  NewsItem, ARE_NEWS_LOADED, NEWS, COUNTRY, CATHEGORY, CURRENT_PAGE, TOTAL_PAGES, NewsActionTypes,
+  NewsItem, ARE_NEWS_LOADED, NEWS, COUNTRY, CATHEGORY,
+  CURRENT_NEWS_ITEM_CARD_ID, IS_ID_CHANGING, NewsActionTypes,
 } from './types';
 
 function setAreNewsLoaded(areNewsLoaded: boolean): NewsActionTypes {
@@ -31,30 +32,29 @@ function setCathegory(cathegory: string): NewsActionTypes {
   };
 }
 
-function setCurrentPage(currentPage: number): NewsActionTypes {
+function setCurrentNewsItemCardId(currentNewsItemCardId: number): NewsActionTypes {
   return {
-    type: CURRENT_PAGE,
-    currentPage,
+    type: CURRENT_NEWS_ITEM_CARD_ID,
+    currentNewsItemCardId,
   };
 }
 
-function setTotalPages(totalPages: number): NewsActionTypes {
+function setIsIdChanging(isIdChanging: boolean): NewsActionTypes {
   return {
-    type: TOTAL_PAGES,
-    totalPages,
+    type: IS_ID_CHANGING,
+    isIdChanging,
   };
 }
 
 function getNews(
-  country: string, cathegory: string, page: number, news: null | Array<NewsItem>,
+  country: string, cathegory: string,
 ) {
   const API_KEY = 'e8169df8eb694e758fae2531e218d78e';
   const url = 'https://newsapi.org/v2/top-headlines?'
   + `apiKey=${API_KEY}`
   + `&country=${country}`
   + `&category=${cathegory}`
-  + '&pageSize=10'
-  + `&page=${page}`;
+  + '&pageSize=100';
   return (dispatch: Dispatch) => {
     dispatch(setAreNewsLoaded(false));
     return fetch(url)
@@ -66,14 +66,14 @@ function getNews(
           urlToImage: v.urlToImage,
           date: new Date(v.publishedAt).toLocaleDateString('en-GB').split('/').join(' '),
         }));
-        dispatch(setCurrentPage(page));
-        dispatch(setNews(page > 1 ? [...news, ...items] : items));
+        dispatch(setNews(items));
         dispatch(setAreNewsLoaded(true));
-        dispatch(setTotalPages(Math.ceil(data.totalResults / 10)));
-      });
+      })
+      .catch((e) => console.log(e));
   };
 }
 
 export {
-  setAreNewsLoaded, setNews, setCountry, setCathegory, setCurrentPage, setTotalPages, getNews,
+  setAreNewsLoaded, setNews, setCountry, setCathegory, getNews, setCurrentNewsItemCardId,
+  setIsIdChanging,
 };
