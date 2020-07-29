@@ -1,17 +1,39 @@
 import * as React from 'react';
 import NewsPageNavBarTypes from './types';
-import countryCodes from '../../utils/countries';
+import countryCodes from '../../utils/newsQueryParameters';
 import styles from './NewsPageNavBar.module.css';
 
 export default function NewsPageNavBar({
-  country, cathegory, onChange, onCountryChange, onCathegoryChange,
+  country, category, currentNewsAPIRequest, onChange, onCountryChange, onCategoryChange, onSearch,
 }: NewsPageNavBarTypes) {
+  const [query, setQuery] = React.useState('');
+  console.log(country, category, currentNewsAPIRequest);
   React.useEffect(() => {
-    onChange(country, cathegory);
-    // console.log('nav:', country, cathegory)
-  }, [country, cathegory]);
+    if (currentNewsAPIRequest === 'topics') {
+      onChange(country, category);
+    } else {
+      onSearch(country, query);
+    }
+  }, [country, category]);
+
   return (
     <div className={styles.wrapper}>
+      <input
+        type="search"
+        name="search"
+        value={query}
+        onChange={(e) => {
+          setQuery(e.target.value);
+        }}
+      />
+      <button
+        type="button"
+        onClick={() => {
+          onSearch(country, query);
+        }}
+      >
+        Search
+      </button>
       <select
         id="countries"
         value={country}
@@ -27,18 +49,19 @@ export default function NewsPageNavBar({
       </select>
       <select
         id="cathegories"
-        value={cathegory}
+        value={category}
         onChange={((e) => {
-          onCathegoryChange(e.target.value);
+          onCategoryChange(e.target.value);
         })}
       >
+        <option value="world">World</option>
+        <option value="nation">Nation</option>
         <option value="business">Business</option>
-        <option value="entertainment">Entertainment</option>
-        <option value="general">General</option>
-        <option value="health">Health</option>
-        <option value="science">Science</option>
-        <option value="sports">Sports</option>
         <option value="technology">Technology</option>
+        <option value="entertainment">Entertainment</option>
+        <option value="sports">Sports</option>
+        <option value="science">Science</option>
+        <option value="health">Health</option>
       </select>
     </div>
   );

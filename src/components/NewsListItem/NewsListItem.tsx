@@ -3,10 +3,10 @@ import NewsListItemTypes from './types';
 import styles from './NewsListItem.module.css';
 
 export default function NewsListItem({
-  title, url, date, id, onItemClick, style,
+  title, url, date, sourceName, sourceUrl, id, onItemClick, style, currentNewsItemCardId,
 }: NewsListItemTypes) {
   return (
-    <div className={styles.wrapper}
+    <div className={currentNewsItemCardId === id ? styles.activeIdWrapper : styles.wrapper}
       onClick={() => {
         onItemClick(id);
       }}
@@ -15,6 +15,9 @@ export default function NewsListItem({
       <div className={styles.title}>
         {title}
       </div>
+      <a href={sourceUrl} className={styles.source}>
+        {sourceName}
+      </a>
       <div className={styles.date}>
         {date}
       </div>

@@ -26,6 +26,8 @@ export default function NewsPage({ news, currentNewsItemCardId, isIdChanging }: 
       title={news[index].title}
       url={news[index].url}
       date={news[index].date}
+      sourceName={news[index].sourceName}
+      sourceUrl={news[index].sourceUrl}
       id={index}
     />
   );
@@ -52,7 +54,7 @@ export default function NewsPage({ news, currentNewsItemCardId, isIdChanging }: 
             <FixedSizeList
               height={500}
               itemCount={news.length}
-              itemSize={75}
+              itemSize={90}
               width={450}
               className={styles.list}
             >

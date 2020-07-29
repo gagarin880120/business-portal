@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import {
-  NewsItem, ARE_NEWS_LOADED, NEWS, COUNTRY, CATHEGORY,
-  CURRENT_NEWS_ITEM_CARD_ID, IS_ID_CHANGING, NewsActionTypes,
+  NewsItem, ARE_NEWS_LOADED, NEWS, COUNTRY, CATEGORY, CURRENT_NEWS_ITEM_CARD_ID,
+  IS_ID_CHANGING, CURRENT_NEWS_API_REQUEST, NewsActionTypes,
 } from './types';
 
 function setAreNewsLoaded(areNewsLoaded: boolean): NewsActionTypes {
@@ -25,10 +25,10 @@ function setCountry(country: string): NewsActionTypes {
   };
 }
 
-function setCathegory(cathegory: string): NewsActionTypes {
+function setCategory(category: string): NewsActionTypes {
   return {
-    type: CATHEGORY,
-    cathegory,
+    type: CATEGORY,
+    category,
   };
 }
 
@@ -46,15 +46,21 @@ function setIsIdChanging(isIdChanging: boolean): NewsActionTypes {
   };
 }
 
+function setCurrentNewsAPIRequest(currentNewsAPIRequest: string): NewsActionTypes {
+  return {
+    type: CURRENT_NEWS_API_REQUEST,
+    currentNewsAPIRequest,
+  };
+}
+
 function getNews(
-  country: string, cathegory: string,
+  country: string, category: string,
 ) {
-  const API_KEY = 'e8169df8eb694e758fae2531e218d78e';
-  const url = 'https://newsapi.org/v2/top-headlines?'
-  + `apiKey=${API_KEY}`
+  const API_KEY = '6e32a23ffca37acfdc46f9027792a220';
+  const url = `https://gnews.io/api/v3/topics/${category}?`
+  + `token=${API_KEY}`
   + `&country=${country}`
-  + `&category=${cathegory}`
-  + '&pageSize=100';
+  + '&lang=us';
   return (dispatch: Dispatch) => {
     dispatch(setAreNewsLoaded(false));
     return fetch(url)
@@ -63,17 +69,52 @@ function getNews(
         const items = data.articles.map((v: any) => ({
           title: v.title,
           url: v.url,
-          urlToImage: v.urlToImage,
+          urlToImage: v.image,
           date: new Date(v.publishedAt).toLocaleDateString('en-GB').split('/').join(' '),
+          sourceName: v.source.name,
+          sourceUrl: v.source.url,
         }));
         dispatch(setNews(items));
         dispatch(setAreNewsLoaded(true));
+        dispatch(setCurrentNewsItemCardId(0));
+      })
+      .catch((e) => console.log(e));
+  };
+}
+
+function getNewsBySearch(
+  country: string, query: string,
+) {
+  console.log(country, query)
+  const API_KEY = '6e32a23ffca37acfdc46f9027792a220';
+  const url = 'https://gnews.io/api/v3/search?'
+  + `q=${query}`
+  + `&token=${API_KEY}`
+  + `&country=${country}`
+  + '&lang=en';
+  return (dispatch: Dispatch) => {
+    dispatch(setAreNewsLoaded(false));
+    dispatch(setCurrentNewsAPIRequest('search'));
+    return fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        const items = data.articles.map((v: any) => ({
+          title: v.title,
+          url: v.url,
+          urlToImage: v.image,
+          date: new Date(v.publishedAt).toLocaleDateString('en-GB').split('/').join(' '),
+          sourceName: v.source.name,
+          sourceUrl: v.source.url,
+        }));
+        dispatch(setNews(items));
+        dispatch(setAreNewsLoaded(true));
+        dispatch(setCurrentNewsItemCardId(0));
       })
       .catch((e) => console.log(e));
   };
 }
 
 export {
-  setAreNewsLoaded, setNews, setCountry, setCathegory, getNews, setCurrentNewsItemCardId,
-  setIsIdChanging,
+  setAreNewsLoaded, setNews, setCountry, setCategory, getNews, setCurrentNewsItemCardId,
+  setIsIdChanging, setCurrentNewsAPIRequest, getNewsBySearch,
 };

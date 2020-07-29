@@ -3,7 +3,7 @@ import { NewsItem } from '../../store/types';
 import styles from './NewsItemCard.module.css';
 
 export default function NewsItemCard({
-  title, url, urlToImage, date,
+  title, url, urlToImage, date, sourceName, sourceUrl,
 }: NewsItem) {
   return (
     <div className={styles.wrapper}>
@@ -13,6 +13,9 @@ export default function NewsItemCard({
             <p className={styles.title}>
               {title}
             </p>
+            <a href={sourceUrl} className={styles.source}>
+              {sourceName}
+            </a>
             <p className={styles.date}>
               {date}
             </p>

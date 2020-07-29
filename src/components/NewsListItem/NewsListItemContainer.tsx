@@ -5,10 +5,11 @@ import { ThunkDispatch } from 'redux-thunk';
 import { NewsState } from '../../store/types';
 import NewsListItemTypes from './types';
 import { setCurrentNewsItemCardId, setIsIdChanging } from '../../store/actions';
+import { selectCurrentNewsItemCardId } from '../../store/selectors';
 import NewsListItem from './NewsListItem';
 
 export function NewsListItemContainer({
-  title, url, date, id, onItemClick, style,
+  title, url, date, sourceName, sourceUrl, id, onItemClick, style, currentNewsItemCardId,
 }: NewsListItemTypes) {
   return (
     <NewsListItem
@@ -16,11 +17,18 @@ export function NewsListItemContainer({
       title={title}
       url={url}
       date={date}
+      sourceName={sourceName}
+      sourceUrl={sourceUrl}
       id={id}
       onItemClick={onItemClick}
+      currentNewsItemCardId={currentNewsItemCardId}
     />
   );
 }
+
+export const mapStateToProps = (state: NewsState) => ({
+  currentNewsItemCardId: selectCurrentNewsItemCardId(state),
+});
 
 export const mapDispatchToProps = (dispatch: ThunkDispatch<NewsState, void, Action>) => ({
   onItemClick(id: number) {
@@ -30,4 +38,4 @@ export const mapDispatchToProps = (dispatch: ThunkDispatch<NewsState, void, Acti
   },
 });
 
-export default connect(null, mapDispatchToProps)(NewsListItemContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(NewsListItemContainer);
